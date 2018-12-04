@@ -6,14 +6,16 @@ export default class Counter extends Component {
      this.props.onIncrease(1, id)
   }
 
-  decrease = () => {
+  decrease = (id) => {
     this.props.onUpdate(-1)
-    this.props.onDecrease(1)
+    this.props.onDecrease(1, id)
  }
   render() {
     return (
       <div>
-        <button onClick={()=> this.increase(this.props.id)}>+</button>{this.props.counterNum}<button onClick= {this.decrease}>-</button>
+        <button onClick={()=> this.increase(this.props.id)}>+</button>
+        {this.props.counterNum}
+        <button onClick={()=> this.decrease(this.props.id)}>-</button>
       </div>
     )
   }

@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
 import Counter from './Counter.js'
 export default class CounterGroup extends Component {
-  state = {
-      input:0,
+constructor(props) {
+  super(props);
+  this.state = {
       counter: [],
       sum:0,
       counters: new Array(5).fill(0).map(() => {return {number: 0, id: new Date().getTime + Math.random()}})
   }
-
-  updateInput = (event) => {
-    this.setState({
-      input: event.target.value
-    })
-  }
+}
   
   changeSize = (event) => {
     this.setState({
-      sum: 0,
-      counter: new Array(parseInt(this.state.input)).fill(0)
+      counters: new Array(parseInt(this.refs.countInput.value))
+      .fill(0)
+      .map(() => {
+        return { number: 0, id: new Date().getTime + Math.random() };
+      }),
+      sum: 0
     })
   }
 
@@ -38,15 +38,25 @@ export default class CounterGroup extends Component {
     this.setState({counters: counters})
   }
 
-  decreaseUpdate = (changedNum) => {
-    this.setState({number: this.state.number - changedNum})
+  decreaseUpdate = (changedNum, id) => {
+    const counters = this.state.counters.map(
+      counterItem => {
+        if(counterItem.id === id){
+          return {number: counterItem.number - changedNum, id: id}
+        } else {
+          return counterItem
+        }
+      }
+    )
+    this.setState({counters: counters})
   }
 
   render() {
     return (
       <div>
-        {this.state.counters.map( counterItem =>(
+        {this.state.counters.map(counterItem => (
           <Counter 
+          key={counterItem.id}
           id={counterItem.id}
           onUpdate={this.updateSum} 
           onIncrease={this.increaseUpdate} 
@@ -54,8 +64,11 @@ export default class CounterGroup extends Component {
           counterNum={counterItem.number}/>
           )
         )}
+        <input type="text" ref="countInput" />
+        <button onClick={this.changeSize}>
+        generate
+        </button>
         <span>sum: {this.state.sum}</span>
-        <input onChange={this.updateInput}></input><button onClick={this.changeSize}>generate</button>
       </div>
     )
   }
