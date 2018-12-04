@@ -7,7 +7,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <CounterGroup size={5}/>
+        <CounterGroup />
       </div>
     );
   }
