@@ -5,7 +5,7 @@ export default class CounterGroup extends Component {
       input:0,
       counter: [],
       sum:0,
-      number: 0
+      counters: new Array(5).fill(0).map(() => {return {number: 0, id: new Date().getTime + Math.random()}})
   }
 
   updateInput = (event) => {
@@ -25,8 +25,17 @@ export default class CounterGroup extends Component {
       this.setState({sum: this.state.sum+delta})
   }
 
-  increaseUpdate = (changedNum) => {
-    this.setState({number: this.state.number + changedNum})
+  increaseUpdate = (changedNum, id) => {
+    const counters = this.state.counters.map(
+      counterItem => {
+        if(counterItem.id === id){
+          return {number: counterItem.number + changedNum, id: id}
+        } else {
+          return counterItem
+        }
+      }
+    )
+    this.setState({counters: counters})
   }
 
   decreaseUpdate = (changedNum) => {
@@ -36,7 +45,15 @@ export default class CounterGroup extends Component {
   render() {
     return (
       <div>
-        {this.state.counter.map(()=>(<Counter onUpdate={this.updateSum} onIncrease={this.increaseUpdate} onDecrease={this.decreaseUpdate} counterNum={this.state.number}/>))}
+        {this.state.counters.map( counterItem =>(
+          <Counter 
+          id={counterItem.id}
+          onUpdate={this.updateSum} 
+          onIncrease={this.increaseUpdate} 
+          onDecrease={this.decreaseUpdate} 
+          counterNum={counterItem.number}/>
+          )
+        )}
         <span>sum: {this.state.sum}</span>
         <input onChange={this.updateInput}></input><button onClick={this.changeSize}>generate</button>
       </div>
